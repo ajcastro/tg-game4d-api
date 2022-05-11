@@ -19,6 +19,7 @@ class CreateMarketsTable extends Migration
             $table->string('name');
             $table->string('status')->default('offline')->comment('online/offline');
             $table->string('flag')->nullable();
+            $table->unsignedInteger('period')->nullable()->index();
             $table->timestamps();
         });
     }

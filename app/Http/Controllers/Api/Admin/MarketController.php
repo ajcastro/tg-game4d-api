@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\ResourceController;
 use App\Http\Queries\MarketQuery;
 use App\Models\Market;
+use Illuminate\Http\Request;
 
 class MarketController extends ResourceController
 {
@@ -17,5 +18,15 @@ class MarketController extends ResourceController
         $this->hook(function () {
             $this->query = new MarketQuery;
         })->only(['index', 'show']);
+    }
+
+    public function getMarketSchedule(Market $market)
+    {
+        return $market->marketSchedule;
+    }
+
+    public function setMarketSchedule(Market $market, Request $request)
+    {
+        $market->marketSchedule->fill($request->all())->save();
     }
 }

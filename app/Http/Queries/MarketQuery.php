@@ -6,6 +6,7 @@ use App\Http\Queries\BaseQuery;
 use App\Http\Queries\Contracts\QueryContract;
 use App\Http\Queries\CustomSorts\SortBySub;
 use App\Models\Market;
+use App\Models\MarketSchedule;
 use App\Models\User;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\AllowedSort;
@@ -21,6 +22,7 @@ class MarketQuery extends BaseQuery implements QueryContract
     {
         $this->allowedFields([
             ...Market::allowableFields(),
+            ...fields('market_schedule', MarketSchedule::allowableFields()),
         ]);
 
         return $this;
@@ -28,8 +30,9 @@ class MarketQuery extends BaseQuery implements QueryContract
 
     public function withInclude()
     {
-        // $this->allowedIncludes([
-        // ]);
+        $this->allowedIncludes([
+            'market_schedule',
+        ]);
 
         return $this;
     }

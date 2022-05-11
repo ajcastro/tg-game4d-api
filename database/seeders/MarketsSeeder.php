@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Market;
-use App\Models\MarketWebsite;
+use App\Models\MarketSchedule;
 use App\Models\Website;
 use Illuminate\Database\Seeder;
 
@@ -16,6 +16,8 @@ class MarketsSeeder extends Seeder
      */
     public function run()
     {
+        Market::truncate();
+
         if (Market::query()->count() > 0) {
             return;
         }
@@ -69,5 +71,16 @@ class MarketsSeeder extends Seeder
                 'code' => $row['code']
             ], $row+['status' => collect(['online', 'offline'])->random()]);
         });
+
+        foreach ($markets as $market) {
+            $marketSchedule = $market->marketSchedule->fill([
+                'result_day' => MarketSchedule::DAYS,
+                'off_day' => [],
+                'close_time' => '22:00',
+                'result_time' => '23:00',
+            ]);
+
+            $marketSchedule->save();
+        }
     }
 }

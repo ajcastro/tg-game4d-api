@@ -37,4 +37,9 @@ class Market extends Model
             $query->orWhere('name', 'like', "%{$search}%");
         });
     }
+
+    public function marketSchedule()
+    {
+        return $this->hasOne(MarketSchedule::class)->withDefault();
+    }
 }
