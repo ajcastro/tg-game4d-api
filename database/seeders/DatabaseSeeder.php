@@ -19,5 +19,7 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('password'),
             'name' => 'Admin',
         ]);
+
+        $this->call(MarketsSeeder::class);
     }
 }
