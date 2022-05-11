@@ -2,15 +2,19 @@
 
 namespace App\Models;
 
+use App\Observers\SetsCreatedByAndUpdatedBy;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
+/**
+ * @property Role $role
+ */
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, Traits\HasAllowableFields, Traits\SetActiveStatus;
 
     /**
      * The attributes that are mass assignable.
@@ -19,6 +23,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'username',
         'email',
         'password',
     ];
@@ -41,4 +46,52 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public static function booted()
+    {
+        static::observe(SetsCreatedByAndUpdatedBy::class);
+    }
+
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by_id');
+    }
+
+    public function updatedBy()
+    {
+        return $this->belongsTo(User::class, 'updated_by_id');
+    }
+
+    public function isSuperAdmin(): bool
+    {
+        return true; // TODO: implement later
+    }
+
+    public function getCaslAbilities(): array
+    {
+        if ($this->isSuperAdmin()) {
+            return [[
+                'action' => 'manage',
+                'subject' => 'all',
+            ]];
+        }
+
+        $role = $this->role;
+
+        if (is_null($role)) {
+            return [];
+        }
+
+        return $role->getCaslAbilities();
+    }
+
+    public function getAdminRedirect()
+    {
+        if ($this->isSuperAdmin()) {
+            return '/users';
+        }
+
+        $role = $this->role;
+        return $role->getFirstMenuPermission()?->admin_redirect;
+    }
 }
