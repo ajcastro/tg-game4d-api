@@ -50,6 +50,18 @@ class MarketQuery extends BaseQuery implements QueryContract
     {
         $this->allowedSorts([
             ...Market::allowableFields(),
+            AllowedSort::custom('close_time', SortBySub::make(
+                '__close_time',
+                MarketSchedule::query()
+                ->select('close_time')
+                ->whereColumn('markets.id', 'market_schedules.market_id')
+            )),
+            AllowedSort::custom('result_time', SortBySub::make(
+                '__result_time',
+                MarketSchedule::query()
+                ->select('result_time')
+                ->whereColumn('markets.id', 'market_schedules.market_id')
+            )),
         ]);
 
         return $this;
