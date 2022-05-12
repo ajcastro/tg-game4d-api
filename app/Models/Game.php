@@ -124,7 +124,7 @@ class Game extends Model
         return $this->pendingGameEdits()->where('edit_field', $edit_field)->count() > 0;
     }
 
-    public function applyGameEdit(GameEdit $gameEdit)
+    public function approveGameEdit(GameEdit $gameEdit)
     {
         $field = $gameEdit->edit_field;
         $this->{$field} = $gameEdit->{$field};
