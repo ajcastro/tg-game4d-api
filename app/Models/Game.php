@@ -131,7 +131,9 @@ class Game extends Model
         $gameEdit->approved_by_id = auth()->user()->id ?? 0;
         $gameEdit->save();
 
-        $game = Game::from($gameEdit->game->market);
-        $game->save();
+        if ($field === 'market_result') {
+            $game = Game::from($gameEdit->game->market);
+            $game->save();
+        }
     }
 }
