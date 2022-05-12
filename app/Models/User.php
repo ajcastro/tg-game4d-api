@@ -84,16 +84,16 @@ class User extends Authenticatable
             [
                 'action' => 'read',
                 'subject' => 'Market',
-            ]
+            ],
+            [
+                'action' => 'read',
+                'subject' => 'Game',
+            ],
         ];
     }
 
     public function getAdminRedirect()
     {
-        if ($this->isSuperAdmin()) {
-            return '/users';
-        }
-
-        return '/markets/list';
+        return 'games/list';
     }
 }
