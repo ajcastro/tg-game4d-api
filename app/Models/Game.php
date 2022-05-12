@@ -52,8 +52,8 @@ class Game extends Model
     {
         return new static($attributes + [
             'market_id' => $market->id,
-            'period' => $market->getNextPeriod(),
-            'date' => $market->getNextDate(),
+            'period' => $attributes['period'] ?? $market->getNextPeriod(),
+            'date' => $attributes['date'] ?? $market->getNextDate(),
             'close_time' => $market->marketSchedule->close_time,
             'result_time' => $market->marketSchedule->result_time,
             'market_result' => null,
