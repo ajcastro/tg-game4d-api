@@ -47,6 +47,10 @@ class GameQuery extends BaseQuery implements QueryContract
     {
         $this->allowedFilters([
             AllowedFilter::scope('search'),
+            AllowedFilter::callback('open', function ($query, $value) {
+                $isOpen = boolean($value);
+                $isOpen && $query->whereNull('market_result');
+            }),
         ]);
 
         return $this;
