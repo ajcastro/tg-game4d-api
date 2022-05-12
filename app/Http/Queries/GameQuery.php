@@ -22,6 +22,10 @@ class GameQuery extends BaseQuery implements QueryContract
         $this->allowedFields([
             ...Game::allowableFields(),
             ...fields('market', Market::allowableFields()),
+            // TODO: define fields and update admin games table request
+            // 'pending_edit_date.created_by',
+            // 'pending_edit_close_time.created_by',
+            // 'pending_edit_market_result.created_by',
         ]);
 
         return $this;
@@ -31,6 +35,9 @@ class GameQuery extends BaseQuery implements QueryContract
     {
         $this->allowedIncludes([
             'market',
+            'pending_edit_date.created_by',
+            'pending_edit_close_time.created_by',
+            'pending_edit_market_result.created_by',
         ]);
 
         return $this;

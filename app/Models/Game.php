@@ -45,11 +45,6 @@ class Game extends Model
         });
     }
 
-    public function market()
-    {
-        return $this->belongsTo(Market::class);
-    }
-
     public static function from(Market $market, array $attributes = []): static
     {
         return new static($attributes + [
@@ -67,6 +62,32 @@ class Game extends Model
             ->value(DB::raw('max(period)')) + 1;
     }
 
+    public function market()
+    {
+        return $this->belongsTo(Market::class);
+    }
+
+    public function pendingEditDate()
+    {
+        return $this->hasOne(GameEdit::class)
+            ->where('edit_field', 'date')
+            ->whereNull('approved_by_id');
+    }
+
+    public function pendingEditCloseTime()
+    {
+        return $this->hasOne(GameEdit::class)
+            ->where('edit_field', 'close_time')
+            ->whereNull('approved_by_id');
+    }
+
+    public function pendingEditMarketResult()
+    {
+        return $this->hasOne(GameEdit::class)
+            ->where('edit_field', 'market_result')
+            ->whereNull('approved_by_id');
+    }
+
     public function scopeSearch($query, $search)
     {
         $query->whereHas('market', function ($query) use ($search) {
@@ -80,5 +101,25 @@ class Game extends Model
         $days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
         return $days[$this->result_day] ?? '';
+    }
+
+    public function makeGameEdit($edit_field, $value)
+    {
+        return new GameEdit([
+            'game_id' => $this->id,
+            'edit_field' => $edit_field,
+            $edit_field => $value,
+            'created_by_id' => auth()->user()->id ?? 0,
+        ]);
+    }
+
+    public function applyGameEdit(GameEdit $gameEdit)
+    {
+        $field = $gameEdit->edit_field;
+        $this->{$field} = $gameEdit->{$field};
+        $this->save();
+
+        $gameEdit->approved_by_id = auth()->user()->id ?? 0;
+        $gameEdit->save();
     }
 }
