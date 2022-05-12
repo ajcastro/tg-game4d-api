@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * @property Market $market
+ */
 class Game extends Model
 {
     use HasFactory, Traits\HasAllowableFields;
@@ -49,17 +52,12 @@ class Game extends Model
     {
         return new static($attributes + [
             'market_id' => $market->id,
-            'period' => static::getNextPeriod($market),
+            'period' => $market->getNextPeriod(),
+            'date' => $market->getNextDate(),
             'close_time' => $market->marketSchedule->close_time,
             'result_time' => $market->marketSchedule->result_time,
             'market_result' => null,
         ]);
-    }
-
-    public static function getNextPeriod(Market $market)
-    {
-        return static::where('market_id', $market->id)
-            ->value(DB::raw('max(period)')) + 1;
     }
 
     public function market()
@@ -132,5 +130,10 @@ class Game extends Model
 
         $gameEdit->approved_by_id = auth()->user()->id ?? 0;
         $gameEdit->save();
+
+        if ($field === 'market_result') {
+            $game = Game::from($gameEdit->game->market);
+            $game->save();
+        }
     }
 }

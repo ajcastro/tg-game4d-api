@@ -84,4 +84,9 @@ class MarketSchedule extends Model
     {
         return static::sortDays($days) === static::DAYS;
     }
+
+    public function isDayIncluded($dayInText)
+    {
+        return collect($this->result_day)->contains($dayInText);
+    }
 }
