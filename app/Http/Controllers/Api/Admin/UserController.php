@@ -38,27 +38,4 @@ class UserController extends ResourceController
         }
         $user->fill($data);
     }
-
-    public function parentGroups(User $user)
-    {
-        return JsonResource::make($user->accesses);
-    }
-
-    public function syncParentGroups(Request $request, User $user)
-    {
-        $request->validate([
-            'items' => ['array'],
-            'items.*.parent_group_id' => ['required', 'exists:parent_groups,id'],
-            'items.*.role_id' => ['required', 'exists:roles,id'],
-        ]);
-
-        $sync = collect($request->items)->mapWithKeys(function ($item) {
-            $item = (object) $item;
-            return [
-                $item->parent_group_id => ['role_id' => $item->role_id]
-            ];
-        });
-
-        return $user->parentGroups()->sync($sync);
-    }
 }
