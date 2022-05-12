@@ -35,10 +35,15 @@ class Game extends Model
         'market_id' => 'integer',
         'market_period' => 'date',
         'period' => 'integer',
-        'close_time' => 'timestamp',
-        'result_time' => 'timestamp',
         'result_day' => 'integer',
     ];
+
+    public static function booted()
+    {
+        static::saving(function (Game $game) {
+            $game->result_day = $game->market_period->dayOfWeek;
+        });
+    }
 
     public function market()
     {
@@ -49,16 +54,16 @@ class Game extends Model
     {
         return new static($attributes + [
             'market_id' => $market->id,
-            'period' => static::getNextPeriod($market->market->code),
+            'period' => static::getNextPeriod($market),
             'close_time' => $market->marketSchedule->close_time,
             'result_time' => $market->marketSchedule->result_time,
             'market_result' => null,
         ]);
     }
 
-    public static function getNextPeriod($market_code)
+    public static function getNextPeriod(Market $market)
     {
-        return static::where('market_code', $market_code)
+        return static::where('market_id', $market->id)
             ->value(DB::raw('max(period)')) + 1;
     }
 }
