@@ -40,16 +40,28 @@ class UserRequest extends FormRequest
                 'string',
                 Rule::unique('users', 'username')->ignore($user),
             ],
-            'email' => [
-                'required',
+            'phone' => [
+                'nullable',
                 'string',
-                'email',
             ],
+            // 'email' => [
+            //     'required',
+            //     'string',
+            //     'email',
+            // ],
             'password' => Rule::when(is_null($user), [
                 'required',
                 Password::min(8),
                 'confirmed'
-            ])
+            ]),
+            'is_active' => [
+                'nullable',
+                'boolean',
+            ],
+            'is_admin' => [
+                'nullable',
+                'boolean',
+            ],
         ]);
     }
 }

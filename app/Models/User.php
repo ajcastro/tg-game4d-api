@@ -24,8 +24,11 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'username',
+        'phone',
         'email',
         'password',
+        'is_active',
+        'is_admin',
     ];
 
     /**
@@ -45,6 +48,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'is_admin' => 'boolean',
     ];
 
     public static function booted()
