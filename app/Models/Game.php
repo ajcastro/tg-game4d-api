@@ -88,6 +88,12 @@ class Game extends Model
             ->whereNull('approved_by_id');
     }
 
+    public function pendingGameEdits()
+    {
+        return $this->hasMany(GameEdit::class)
+            ->whereNull('approved_by_id');
+    }
+
     public function scopeSearch($query, $search)
     {
         $query->whereHas('market', function ($query) use ($search) {
@@ -111,6 +117,11 @@ class Game extends Model
             $edit_field => $value,
             'created_by_id' => auth()->user()->id ?? 0,
         ]);
+    }
+
+    public function hasExistingGameEdit($edit_field)
+    {
+        return $this->pendingGameEdits()->where('edit_field', $edit_field)->count() > 0;
     }
 
     public function applyGameEdit(GameEdit $gameEdit)

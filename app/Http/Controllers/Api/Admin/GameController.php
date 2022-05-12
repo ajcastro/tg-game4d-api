@@ -8,6 +8,7 @@ use App\Http\Requests\Api\Admin\GameRequest;
 use App\Models\Game;
 use App\Models\GameEdit;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Validation\ValidationException;
 
 class GameController extends ResourceController
 {
@@ -38,6 +39,12 @@ class GameController extends ResourceController
 
         foreach ($edit_fields as $edit_field) {
             if ($request->input($edit_field)) {
+                if ($game->hasExistingGameEdit($edit_field)) {
+                    throw ValidationException::withMessages([
+                        $edit_field => ["There is already a pending edit request for {$edit_field}."]
+                    ]);
+                }
+
                 $game->makeGameEdit($edit_field, $request->input($edit_field))
                     ->save();
             }
