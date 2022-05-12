@@ -25,7 +25,7 @@ class GameFactory extends Factory
     {
         return [
             'market_id' => Market::factory(),
-            'market_period' => $this->faker->date(),
+            'date' => $this->faker->date(),
             'period' => $this->faker->randomNumber(),
             'close_time' => $this->faker->dateTime(),
             'result_time' => $this->faker->dateTime(),

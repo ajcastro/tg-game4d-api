@@ -17,7 +17,7 @@ class Game extends Model
      */
     protected $fillable = [
         'market_id',
-        'market_period',
+        'date',
         'period',
         'close_time',
         'result_time',
@@ -33,7 +33,7 @@ class Game extends Model
     protected $casts = [
         'id' => 'integer',
         'market_id' => 'integer',
-        'market_period' => 'date',
+        'date' => 'date',
         'period' => 'integer',
         'result_day' => 'integer',
     ];
@@ -41,7 +41,7 @@ class Game extends Model
     public static function booted()
     {
         static::saving(function (Game $game) {
-            $game->result_day = $game->market_period->dayOfWeek;
+            $game->result_day = $game->date->dayOfWeek;
         });
     }
 
