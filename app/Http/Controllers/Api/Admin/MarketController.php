@@ -29,4 +29,17 @@ class MarketController extends ResourceController
     {
         $market->marketSchedule->fill($request->all())->save();
     }
+
+    public function setOnlineStatus(Market $market, Request $request)
+    {
+        $request->validate([
+            'status' => [
+                'required',
+                'in:online,offline',
+            ],
+        ]);
+
+        $market->status = $request->status;
+        $market->save();
+    }
 }
