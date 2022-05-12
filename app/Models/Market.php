@@ -62,6 +62,15 @@ class Market extends Model
 
     public function getNextDate()
     {
-        return null; // TODO: implement code
+        $game = $this->games()->latest('date')->first();
+
+        $marketSchedule = $this->marketSchedule;
+        $nextDate = $game->date->copy()->addDay();
+
+        while (!$marketSchedule->isDayIncluded($dayInText = $nextDate->format('l'))) {
+            $nextDate = $nextDate->addDay();
+        }
+
+        return $nextDate;
     }
 }
