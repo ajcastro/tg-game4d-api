@@ -16,8 +16,6 @@ class MarketsSeeder extends Seeder
      */
     public function run()
     {
-        Market::truncate();
-
         if (Market::query()->count() > 0) {
             return;
         }

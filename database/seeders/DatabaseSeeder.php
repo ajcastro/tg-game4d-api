@@ -18,6 +18,14 @@ class DatabaseSeeder extends Seeder
         ], [
             'password' => bcrypt('password'),
             'name' => 'Admin',
+            'is_admin' => true,
+        ]);
+
+        \App\Models\User::firstOrCreate([
+            'username' => 'user',
+        ], [
+            'password' => bcrypt('password'),
+            'name' => 'User',
         ]);
 
         $this->call(MarketsSeeder::class);

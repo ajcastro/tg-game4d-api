@@ -14,8 +14,8 @@ class AdjustUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('phone')->after('username');
-            $table->boolean('is_admin')->after('is_active');
+            $table->string('phone')->nullable()->after('username');
+            $table->boolean('is_admin')->default(0)->after('is_active');
         });
     }
 }

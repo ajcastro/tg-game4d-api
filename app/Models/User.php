@@ -68,7 +68,7 @@ class User extends Authenticatable
 
     public function isSuperAdmin(): bool
     {
-        return true; // TODO: implement later
+        return $this->is_admin;
     }
 
     public function getCaslAbilities(): array
@@ -80,13 +80,12 @@ class User extends Authenticatable
             ]];
         }
 
-        $role = $this->role;
-
-        if (is_null($role)) {
-            return [];
-        }
-
-        return $role->getCaslAbilities();
+        return [
+            [
+                'action' => 'read',
+                'subject' => 'Market',
+            ]
+        ];
     }
 
     public function getAdminRedirect()
@@ -95,7 +94,6 @@ class User extends Authenticatable
             return '/users';
         }
 
-        $role = $this->role;
-        return $role->getFirstMenuPermission()?->admin_redirect;
+        return '/markets/list';
     }
 }
