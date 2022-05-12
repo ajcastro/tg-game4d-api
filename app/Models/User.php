@@ -94,10 +94,11 @@ class User extends Authenticatable
 
     public function getAdminRedirect()
     {
-        if ($this->isSuperAdmin()) {
-            return '/users';
-        }
+        return 'games/list';
+        // if ($this->isSuperAdmin()) {
+        //     return '/users';
+        // }
 
-        return '/markets/list';
+        // return '/markets/list';
     }
 }

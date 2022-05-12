@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class Game extends Model
 {
-    use HasFactory;
+    use HasFactory, Traits\HasAllowableFields;
 
     /**
      * The attributes that are mass assignable.
@@ -65,5 +65,20 @@ class Game extends Model
     {
         return static::where('market_id', $market->id)
             ->value(DB::raw('max(period)')) + 1;
+    }
+
+    public function scopeSearch($query, $search)
+    {
+        $query->whereHas('market', function ($query) use ($search) {
+            $query->where('markets.code', 'like', "%{$search}%");
+            $query->orWhere('markets.name', 'like', "%{$search}%");
+        });
+    }
+
+    public function getResultDayTextAttribute()
+    {
+        $days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+        return $days[$this->result_day] ?? '';
     }
 }
