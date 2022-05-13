@@ -132,8 +132,8 @@ class Game extends Model
             ->save();
 
         if ($field === 'market_result') {
-            $game = Game::from($gameEdit->game->market);
-            $game->save();
+            Game::from($gameEdit->game->market)
+                ->save();
         }
     }
 
