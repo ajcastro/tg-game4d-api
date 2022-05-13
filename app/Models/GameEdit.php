@@ -25,6 +25,7 @@ class GameEdit extends Model
         'market_result',
         'created_by_id',
         'approved_by_id',
+        'action',
     ];
 
     /**
@@ -53,5 +54,13 @@ class GameEdit extends Model
     public function approvedBy()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function setApproval($action)
+    {
+        $this->approved_by_id = auth()->user()->id ?? 0;
+        $this->action = $action;
+
+        return $this;
     }
 }

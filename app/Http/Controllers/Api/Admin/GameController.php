@@ -7,6 +7,7 @@ use App\Http\Queries\GameQuery;
 use App\Http\Requests\Api\Admin\GameRequest;
 use App\Models\Game;
 use App\Models\GameEdit;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Validation\ValidationException;
 
@@ -53,12 +54,18 @@ class GameController extends ResourceController
         return new JsonResource($game);
     }
 
-    public function approveGameEdit(Game $game, GameEdit $gameEdit)
+    public function approveGameEdit(Game $game, GameEdit $gameEdit, Request $request)
     {
         if ($gameEdit->created_by_id === auth()->user()->id) {
             throw ValidationException::withMessages([$gameEdit->edit_field => ['Cannot approve by the same user who edit.']]);
         }
+        $action = $request->input('action', 'approve');
 
-        $game->approveGameEdit($gameEdit);
+        if ($action === 'approve') {
+            $game->approveGameEdit($gameEdit);
+        }
+        if ($action === 'reject') {
+            $game->rejectGameEdit($gameEdit);
+        }
     }
 }

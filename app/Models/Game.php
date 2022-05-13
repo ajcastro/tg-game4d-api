@@ -128,12 +128,18 @@ class Game extends Model
         $this->{$field} = $gameEdit->{$field};
         $this->save();
 
-        $gameEdit->approved_by_id = auth()->user()->id ?? 0;
-        $gameEdit->save();
+        $gameEdit->setApproval('approve')
+            ->save();
 
         if ($field === 'market_result') {
             $game = Game::from($gameEdit->game->market);
             $game->save();
         }
+    }
+
+    public function rejectGameEdit(GameEdit $gameEdit)
+    {
+        $gameEdit->setApproval('reject')
+            ->save();
     }
 }
