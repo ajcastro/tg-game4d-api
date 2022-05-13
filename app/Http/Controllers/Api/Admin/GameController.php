@@ -59,11 +59,13 @@ class GameController extends ResourceController
         if ($gameEdit->created_by_id === auth()->user()->id) {
             throw ValidationException::withMessages([$gameEdit->edit_field => ['Cannot approve by the same user who edit.']]);
         }
+
         $action = $request->input('action', 'approve');
 
         if ($action === 'approve') {
             $game->approveGameEdit($gameEdit);
         }
+
         if ($action === 'reject') {
             $game->rejectGameEdit($gameEdit);
         }
