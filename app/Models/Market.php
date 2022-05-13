@@ -25,6 +25,7 @@ class Market extends Model
         'name',
         'status',
         'flag',
+        'period',
     ];
 
     /**
