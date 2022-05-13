@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\ResourceController;
 use App\Http\Queries\MarketQuery;
 use App\Http\Requests\Api\Admin\MarketRequest;
+use App\Http\Requests\Api\Admin\MarketScheduleRequest;
 use App\Models\Market;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -42,9 +43,9 @@ class MarketController extends ResourceController
         return $market->marketSchedule;
     }
 
-    public function setMarketSchedule(Market $market, Request $request)
+    public function setMarketSchedule(Market $market, MarketScheduleRequest $request)
     {
-        $market->marketSchedule->fill($request->all())->save();
+        $market->marketSchedule->fill($request->validated())->save();
     }
 
     public function setOnlineStatus(Market $market, Request $request)
