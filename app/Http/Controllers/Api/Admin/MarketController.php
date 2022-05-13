@@ -7,6 +7,7 @@ use App\Http\Queries\MarketQuery;
 use App\Http\Requests\Api\Admin\MarketRequest;
 use App\Models\Market;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 
 class MarketController extends ResourceController
 {
@@ -23,6 +24,17 @@ class MarketController extends ResourceController
         $this->hook(function () {
             $this->request = MarketRequest::class;
         })->only(['store', 'update']);
+    }
+
+    protected function fill($market, $request)
+    {
+        parent::fill($market, $request);
+
+        /** @var UploadedFile */
+        $uploadedFile = $request->file('flag');
+        if ($uploadedFile) {
+            $market->flag = $uploadedFile->store("market_flags");
+        }
     }
 
     public function getMarketSchedule(Market $market)

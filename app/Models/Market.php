@@ -55,6 +55,11 @@ class Market extends Model
         return $this->hasMany(Game::class);
     }
 
+    public function getFlagUrlAttribute()
+    {
+        return storage_disk_url($this->flag);
+    }
+
     public function getNextPeriod()
     {
         return $this->games()
