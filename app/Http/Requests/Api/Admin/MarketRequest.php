@@ -44,6 +44,7 @@ class MarketRequest extends FormRequest
                 'required',
                 'numeric',
             ],
+            'website' => [],
             'flag' => [
                 'nullable',
                 'image',
