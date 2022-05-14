@@ -49,7 +49,17 @@ class GameQuery extends BaseQuery implements QueryContract
             AllowedFilter::scope('search'),
             AllowedFilter::callback('open', function ($query, $value) {
                 $isOpen = boolean($value);
-                $isOpen && $query->whereNull('market_result');
+                if ($isOpen) {
+                    $query->whereNull('market_result');
+                } else {
+                    $query->whereNotNull('market_result');
+                }
+            }),
+            AllowedFilter::callback('date_range', function ($query, array $value) {
+                [$start_date, $end_date] = $value;
+                $start_date = carbon($start_date)->startOfDay();
+                $end_date = carbon($end_date)->endOfDay();
+                $query->whereBetween('games.date', [$start_date, $end_date]);
             }),
         ]);
 
