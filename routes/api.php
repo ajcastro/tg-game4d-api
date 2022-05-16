@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Admin\AuthController;
 use App\Http\Controllers\Api\Gamesite\AuthController as GamesiteAuthController;
+use App\Http\Controllers\Api\Gamesite\MarketResultController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -33,6 +34,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:sanctum']], function (
 */
 Route::name('gamesite.')->prefix('gamesite/auth')->group(function () {
     Route::get('login', [GamesiteAuthController::class, 'login']);
+    Route::post('login', [GamesiteAuthController::class, 'login']);
 
     Route::group(['middleware' => 'auth:members'], function() {
         Route::post('logout', [GamesiteAuthController::class, 'logout']);
@@ -40,8 +42,10 @@ Route::name('gamesite.')->prefix('gamesite/auth')->group(function () {
     });
 });
 
-Route::name('gamesite.')->prefix('gamesite')->middleware(['auth:members'])->group(function () {
-
-    require __DIR__.'/admin/markets.php';
-    require __DIR__.'/admin/games.php';
+Route::name('gamesite.')->prefix('gamesite')->group(function () {
+    Route::middleware(['auth:members'])->group(function () {
+        Route::get('market_results', MarketResultController::class)->name('market_results.index');
+        require __DIR__.'/admin/markets.php';
+        require __DIR__.'/admin/games.php';
+    });
 });

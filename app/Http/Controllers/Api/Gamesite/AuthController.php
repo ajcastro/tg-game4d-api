@@ -14,21 +14,16 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'token' => ['required'],
-            'from_website_url' => ['required'],
+            'token'             => ['required', 'string'],
+            'from_website_url'  => ['required', 'string'],
         ]);
-
-        if ($request->wantsJson()) {
-            return response([
-                'status' => 400,
-                'message' => 'Should be performed on browser to redirect to frontend UI url.',
-            ], 400);
-        }
 
         $token = $request->input('token');
         $fromWebsiteUrl = $request->input('from_website_url');
 
-        $response = Http::withToken($token)->get($fromWebsiteUrl.'/api/user');
+        $response = Http::withToken($token)
+            ->withHeaders(['Accept' => 'application/json'])
+            ->get($fromWebsiteUrl.'/api/user');
 
         if ($response->successful()) {
             $json = $response->json();
@@ -38,6 +33,10 @@ class AuthController extends Controller
             ]);
 
             $tokenResult = $member->createToken($this->getTokenName($request), ['*']);
+
+            if ($request->wantsJson()) {
+                return $this->respondForApi($tokenResult->plainTextToken, $member);
+            }
 
             return redirect(config('app.ui_url').'/login?token='.$tokenResult->plainTextToken);
         } else {
@@ -52,6 +51,15 @@ class AuthController extends Controller
     private function getTokenName(Request $request)
     {
         return $request->input('from_website_url');
+    }
+
+    private function respondForApi($token, Member $member)
+    {
+        return JsonResource::make([
+            'access_token' => $token,
+            'member' => $member->toArray(),
+            'token_type' => 'Bearer',
+        ]);
     }
 
     /**
