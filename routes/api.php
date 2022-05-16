@@ -43,8 +43,9 @@ Route::name('gamesite.')->prefix('gamesite/auth')->group(function () {
 });
 
 Route::name('gamesite.')->prefix('gamesite')->group(function () {
+    Route::get('market_results', MarketResultController::class)->name('market_results.index');
+
     Route::middleware(['auth:members'])->group(function () {
-        Route::get('market_results', MarketResultController::class)->name('market_results.index');
         require __DIR__.'/admin/markets.php';
         require __DIR__.'/admin/games.php';
     });
