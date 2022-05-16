@@ -37,7 +37,7 @@ class AuthController extends Controller
         return $this->respondWithToken($tokenResult->plainTextToken, $user);
     }
 
-    public function respondWithToken($token, User $user)
+    private function respondWithToken($token, User $user)
     {
         return JsonResource::make([
             'access_token' => $token,
