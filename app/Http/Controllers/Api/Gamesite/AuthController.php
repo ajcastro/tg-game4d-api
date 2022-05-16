@@ -39,7 +39,7 @@ class AuthController extends Controller
 
             $tokenResult = $member->createToken($this->getTokenName($request), ['*']);
 
-            return redirect(config('app.ui_url').'/auth_callback?token='.$tokenResult->plainTextToken);
+            return redirect(config('app.ui_url').'/login?token='.$tokenResult->plainTextToken);
         } else {
             return [
                 'success' => false,
@@ -52,5 +52,14 @@ class AuthController extends Controller
     private function getTokenName(Request $request)
     {
         return $request->input('from_website_url');
+    }
+
+    /**
+     * Get the authenticated user
+     */
+    public function me(Request $request)
+    {
+        $user = $request->user();
+        return JsonResource::make($user);
     }
 }
