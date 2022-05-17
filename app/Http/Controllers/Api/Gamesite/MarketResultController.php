@@ -22,7 +22,7 @@ class MarketResultController extends Controller
 
         $this->assignLatestGameResultToMarkets($markets, $showFull);
 
-        $markets = $markets->whereNotNull('result');
+        $markets = $markets->whereNotNull('result')->values();
 
         if ($showFull) {
             return $markets;
