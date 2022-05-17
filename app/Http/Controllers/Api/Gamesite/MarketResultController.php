@@ -22,6 +22,8 @@ class MarketResultController extends Controller
 
         $this->assignLatestGameResultToMarkets($markets, $showFull);
 
+        $markets = $markets->whereNotNull('result');
+
         if ($showFull) {
             return $markets;
         }
