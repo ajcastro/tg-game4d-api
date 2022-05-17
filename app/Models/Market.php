@@ -80,4 +80,14 @@ class Market extends Model
 
         return $nextDate;
     }
+
+    public function findLatestGame(): ?Game
+    {
+        return remember("latest_game.{$this->id}", now()->addMinutes(app()->isProduction() ? 1 : 0), function () {
+            return $this->games()
+                ->whereNotNull('market_result')
+                ->latest('date')
+                ->first();
+        });
+    }
 }

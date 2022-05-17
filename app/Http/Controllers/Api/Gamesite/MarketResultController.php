@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\Gamesite;
 
 use App\Http\Controllers\Controller;
-use App\Models\Game;
 use App\Models\Market;
 use Illuminate\Http\Request;
 
@@ -19,26 +18,31 @@ class MarketResultController extends Controller
     {
         $markets = Market::get();
 
-        // TODO: FIXME: fix this query to retrieve only one game for each market, move into static helper method
-        $results = Game::whereNotNull('market_result')
-            ->orderBy('date')
-            ->get();
+        $showFull = $request->boolean('show_full', false);
 
-        $this->assignResultsToMarkets($markets, $results);
+        $this->assignLatestGameResultToMarkets($markets, $showFull);
+
+        if ($showFull) {
+            return $markets;
+        }
 
         return $markets
-            ->map
-            ->only(['id', 'code',  'name', 'flag_url', 'date', 'result']);
+                ->map
+                ->only(['id', 'code',  'name', 'flag_url', 'date', 'result']);
     }
 
-    private function assignResultsToMarkets($markets, $results)
+    private function assignLatestGameResultToMarkets($markets, $setLatestGame = false)
     {
-        $results = $results->keyBy('market_id');
-
         foreach ($markets as $market) {
-            $result = $results[$market->id] ?? new Game();
-            $market->date = $result->date;
-            $market->result = $result->market_result;
+            /** @var Market $market */
+            $latestGame = $market->findLatestGame() ?? optional();
+
+            $market->date = $latestGame->date;
+            $market->result = $latestGame->market_result;
+
+            if ($setLatestGame) {
+                $market->setRelation('latest_game', $latestGame);
+            }
         }
     }
 }
