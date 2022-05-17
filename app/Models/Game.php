@@ -28,6 +28,10 @@ class Game extends Model
         'result_day',
     ];
 
+    protected $appends = [
+        'result',
+    ];
+
     /**
      * The attributes that should be cast to native types.
      *
@@ -98,6 +102,11 @@ class Game extends Model
             $query->where('markets.code', 'like', "%{$search}%");
             $query->orWhere('markets.name', 'like', "%{$search}%");
         });
+    }
+
+    public function getResultAttribute()
+    {
+        return $this->market_result;
     }
 
     public function getResultDayTextAttribute()
