@@ -48,6 +48,7 @@ class GameQuery extends BaseQuery implements QueryContract
         $this->allowedFilters([
             AllowedFilter::exact('period'),
             AllowedFilter::scope('search'),
+            AllowedFilter::exact('market_id'),
             AllowedFilter::callback('market_ids', function ($query, $value) {
                 $query->whereIn('market_id', $value);
             }),
