@@ -35,6 +35,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:sanctum']], function (
 Route::name('gamesite.')->prefix('gamesite/auth')->group(function () {
     Route::get('login', [GamesiteAuthController::class, 'login']);
     Route::post('login', [GamesiteAuthController::class, 'login']);
+    Route::post('token_for_dev', [GamesiteAuthController::class, 'getTokenForDev']);
 
     Route::group(['middleware' => 'auth:members'], function() {
         Route::post('logout', [GamesiteAuthController::class, 'logout']);

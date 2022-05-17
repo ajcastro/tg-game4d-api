@@ -70,4 +70,17 @@ class AuthController extends Controller
         $user = $request->user();
         return JsonResource::make($user);
     }
+
+    public function getTokenForDev()
+    {
+        if (app()->isProduction()) {
+            return response('', 404);
+        }
+
+        $member = Member::first();
+
+        $tokenResult = $member->createToken('development', ['*']);
+
+        return $this->respondForApi($tokenResult->plainTextToken, $member);
+    }
 }
