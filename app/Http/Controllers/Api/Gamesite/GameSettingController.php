@@ -18,9 +18,13 @@ class GameSettingController extends Controller
     public function __invoke(Request $request)
     {
         $request->validate([
-            'game_code' => 'required',
+            'game_set' => 'required',
         ]);
 
-        return GameSetting::getSetting(auth()->user()->website_code, $request->game_code);
+        if ($request->game_set === '4D/3D/2D') {
+            return GameSetting::getGameSettingsFor4D3D2D(auth()->user()->website_code);
+        }
+
+        return abort(404, 'No game settings found.');
     }
 }

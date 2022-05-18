@@ -18,12 +18,17 @@ class TgHttp
         return TgHttpFactory::instance();
     }
 
-    public function getGameSetting($website_code, $game_code)
+    public function getGameSettings($website_code, array $game_codes = [])
     {
-        return $this->http->get('api/v1/game_setting', [
-            'website_code' => $website_code,
-            'game_code' => $game_code,
+        return $this->http->get('api/v1/game_settings', [
+            'filter' => array_filter([
+                'website_code' => $website_code,
+                'game_codes' => collect($game_codes)->implode(','),
+            ]),
+            'include' => 'game',
+            'paginate' => false,
         ])
-        ->json();
+        ->throw()
+        ->json('data');
     }
 }

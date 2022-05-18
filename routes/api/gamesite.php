@@ -38,6 +38,6 @@ Route::name('gamesite.')->prefix('gamesite')->group(function () {
     Route::middleware(['auth:members'])->group(function () {
         Route::apiResource('markets', MarketController::class)->only(['index', 'show']);
         Route::apiResource('games', GameController::class)->only(['index', 'show']);
-        Route::get('game_setting', GameSettingController::class);
+        Route::get('game_settings', GameSettingController::class);
     });
 });
