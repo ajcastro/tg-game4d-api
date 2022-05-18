@@ -32,6 +32,7 @@ class MarketQuery extends BaseQuery implements QueryContract
     {
         $this->allowedIncludes([
             'market_schedule',
+            'current_game',
         ]);
 
         return $this;
