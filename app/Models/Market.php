@@ -51,6 +51,11 @@ class Market extends Model
         return $this->hasOne(MarketSchedule::class)->withDefault();
     }
 
+    public function currentGame()
+    {
+        return $this->hasOne(Game::class)->whereNull('market_result');
+    }
+
     public function games()
     {
         return $this->hasMany(Game::class);
