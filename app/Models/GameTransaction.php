@@ -5,6 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @method static \Illuminate\Database\Eloquent\Builder winnerFor($game, $game_code, array $result)
+ * @method static \Illuminate\Database\Eloquent\Builder loserFor($game, $game_code, array $result)
+ */
 class GameTransaction extends Model
 {
     use HasFactory;
@@ -47,7 +51,7 @@ class GameTransaction extends Model
         'bet' => 'decimal:2',
         'discount' => 'decimal:2',
         'pay' => 'decimal:2',
-        'game_setting' => 'array',
+        'game_setting' => 'object',
         'status' => 'integer',
         'winning_amount' => 'decimal:2',
         'credit_amount' => 'decimal:2',
@@ -61,5 +65,35 @@ class GameTransaction extends Model
     public function member()
     {
         return $this->belongsTo(Member::class);
+    }
+
+    public function scopeWinnerFor($query, Game $game, $game_code, array $result)
+    {
+        $query
+            ->where('game_id', $game->id)
+            ->where('game_code', $game_code)
+            ->where($result);
+    }
+
+    public function scopeLoserFor($query, Game $game, $game_code, array $result)
+    {
+        $query
+            ->where('game_id', $game->id)
+            ->where('game_code', $game_code)
+            ->where(function ($query) use ($result) {
+                foreach ($result as $numKey => $value) {
+                    $query->where($numKey, '!=', $value);
+                }
+            });
+    }
+
+    public function getGameSetting($key)
+    {
+        return $this->game_setting->{$key};
+    }
+
+    public function computeWinningAmount()
+    {
+        return $this->bet * ($this->getGameSetting('win_multiplier')/100);
     }
 }

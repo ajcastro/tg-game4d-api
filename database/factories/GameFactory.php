@@ -33,4 +33,13 @@ class GameFactory extends Factory
             'result_day' => $this->faker->randomDigitNotNull,
         ];
     }
+
+    public function open()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'market_result' => null,
+            ];
+        });
+    }
 }

@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
+use App\Jobs\GameTransactionsSetWinningStatus;
+use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -143,6 +146,8 @@ class Game extends Model
         if ($field === 'market_result') {
             Game::from($gameEdit->game->market)
                 ->save();
+
+            dispatch(new GameTransactionsSetWinningStatus($this));
         }
     }
 
@@ -150,5 +155,52 @@ class Game extends Model
     {
         $gameEdit->setApproval('reject')
             ->save();
+    }
+
+    public function getResultArray(): array
+    {
+        $result = $this->result;
+
+        if (blank($result)) {
+            return [];
+        }
+
+        return [
+            'num1' => $result[0],
+            'num2' => $result[1],
+            'num3' => $result[2],
+            'num4' => $result[3],
+        ];
+    }
+
+    public function getWinningCombination($game_code): ?array
+    {
+        if (is_null($this->market_result)) {
+            return null;
+        }
+
+        $result = $this->getResultArray();
+
+        if ($game_code === '4D') {
+            return $result;
+        }
+
+        if ($game_code === '3D') {
+            return Arr::only($result, ['num2', 'num3', 'num4']);
+        }
+
+        if ($game_code === '2D') {
+            return Arr::only($result, ['num3', 'num4']);
+        }
+
+        if ($game_code === '2DT') {
+            return Arr::only($result, ['num2', 'num3']);
+        }
+
+        if ($game_code === '2DD') {
+            return Arr::only($result, ['num1', 'num2']);
+        }
+
+        throw new Exception("Invalid game code: {$game_code}.");
     }
 }
