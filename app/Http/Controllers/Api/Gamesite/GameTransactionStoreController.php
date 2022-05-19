@@ -16,7 +16,7 @@ class GameTransactionStoreController extends Controller
 
         // TODO: validate member credits if sufficient
 
-        return $rows->map(function ($row) use ($request) {
+        $rows->map(function ($row) use ($request) {
             $gameTransaction = new GameTransaction(
                 [
                     'game_id' => $request->game_id,
