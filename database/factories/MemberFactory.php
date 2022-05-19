@@ -23,8 +23,8 @@ class MemberFactory extends Factory
     public function definition()
     {
         return [
-            'website_code' => $this->faker->word,
-            'website_username' => $this->faker->word,
+            'website_code' => $this->faker->word(),
+            'website_username' => $this->faker->word(),
             'username' => $this->faker->userName,
         ];
     }
