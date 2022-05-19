@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\Gamesite\AuthController as GamesiteAuthController;
 use App\Http\Controllers\Api\Gamesite\GameController;
 use App\Http\Controllers\Api\Gamesite\GameSettingController;
+use App\Http\Controllers\Api\Gamesite\GameTransactionStoreController;
 use App\Http\Controllers\Api\Gamesite\MarketController;
 use App\Http\Controllers\Api\Gamesite\MarketResultController;
 use Illuminate\Support\Facades\Route;
@@ -38,6 +39,7 @@ Route::name('gamesite.')->prefix('gamesite')->group(function () {
     Route::middleware(['auth:members'])->group(function () {
         Route::apiResource('markets', MarketController::class)->only(['index', 'show']);
         Route::apiResource('games', GameController::class)->only(['index', 'show']);
-        Route::get('game_settings', GameSettingController::class);
+        Route::get('game_settings', GameSettingController::class)->name('game_settings.get');
+        Route::post('game_transactions', GameTransactionStoreController::class)->name('game_transactions.store');
     });
 });

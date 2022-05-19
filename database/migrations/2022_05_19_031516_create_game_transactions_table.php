@@ -26,7 +26,7 @@ class CreateGameTransactionsTable extends Migration
             $table->decimal('discount', 15, 2)->default(0);
             $table->decimal('pay', 15, 2)->default(0);
             $table->json('game_setting')->nullable();
-            $table->unsignedTinyInteger('status')->nullable()->comment('0=lose,1=win,2=draw');
+            $table->unsignedTinyInteger('status')->nullable()->index()->comment('0=lose,1=win,2=draw');
             $table->decimal('winning_amount', 15, 2)->default(0);
             $table->decimal('credit_amount', 15, 2)->default(0);
             $table->timestamps();
