@@ -18,11 +18,13 @@ class GameTransactionStoreController extends Controller
 
         $rows->map(function ($row) use ($request) {
             $gameTransaction = new GameTransaction(
-                [
+                ($request->game_code ? ['game_code' => $request->game_code] : [])
+                + [
                     'game_id' => $request->game_id,
                     'member_id' => $request->user()->id,
                     'game_setting' => $row['gameSetting'],
-                ]+$row
+                ]
+                + $row
             );
             $gameTransaction->save();
             return $gameTransaction;
