@@ -22,6 +22,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:sanctum']], function (
     require __DIR__.'/admin/users.php';
     require __DIR__.'/admin/markets.php';
     require __DIR__.'/admin/games.php';
+    require __DIR__.'/admin/game_transactions.php';
 });
 
 /*
