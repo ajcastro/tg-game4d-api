@@ -60,7 +60,6 @@ class GameTransactionQuery extends BaseQuery implements QueryContract
     {
         $this->allowedSorts([
             ...GameTransaction::allowableFields(),
-            // TODO: Sort By : Bet Big, Bet Small, Pay Big, Pay Small
         ]);
 
         return $this;
