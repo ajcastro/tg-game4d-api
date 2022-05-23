@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class GameTransaction extends Model
 {
-    use HasFactory;
+    use HasFactory, Traits\HasAllowableFields;
 
     /**
      * The attributes that are mass assignable.
@@ -85,6 +85,11 @@ class GameTransaction extends Model
                     $query->where($numKey, '!=', $value);
                 }
             });
+    }
+
+    public function getNumberAttribute()
+    {
+        return collect([$this->num1, $this->num2, $this->num3, $this->num4])->filter()->implode('');
     }
 
     public function getGameSetting($key)

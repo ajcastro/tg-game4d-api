@@ -93,6 +93,10 @@ class User extends Authenticatable
                 'action' => 'read',
                 'subject' => 'GameResult',
             ],
+            [
+                'action' => 'read',
+                'subject' => 'BetList',
+            ],
         ];
     }
 
