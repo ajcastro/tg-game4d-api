@@ -19,11 +19,16 @@ trait PaginateOrListResource
             ? $this->query->withAllDeclarations()
             : $this->query; // can be an eloquent builder only not instance of QueryContract
 
-        $collection = $this->shouldPaginateResource($request)
-            ? $query->paginate($request->per_page ?? $request->limit)
-            : $query->get();
+        $collection = $this->executeCollectionQuery($request, $query);
 
         return $this->resource()::collection($collection);
+    }
+
+    protected function executeCollectionQuery(Request $request, $query)
+    {
+        return $this->shouldPaginateResource($request)
+            ? $query->paginate($request->per_page ?? $request->limit)
+            : $query->get();
     }
 
     protected function resource(): string

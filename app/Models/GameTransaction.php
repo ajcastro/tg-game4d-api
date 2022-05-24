@@ -87,11 +87,6 @@ class GameTransaction extends Model
             });
     }
 
-    public function getNumberAttribute()
-    {
-        return collect([$this->num1, $this->num2, $this->num3, $this->num4])->filter()->implode('');
-    }
-
     public function getGameSetting($key)
     {
         return $this->game_setting->{$key};
